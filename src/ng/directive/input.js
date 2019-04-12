@@ -1349,14 +1349,13 @@ function baseInputType(scope, element, attr, ctrl, $sniffer, $browser) {
     element.on('input', listener);
   } else {
     var deferListener = function(ev, input, origValue) {
-      if (!timeout) {
-        timeout = $browser.defer(function() {
-          timeout = null;
-          if (!input || input.value !== origValue) {
-            listener(ev);
-          }
-        });
-      }
+      if (timeout) $browser.defer.cancel(timeout);
+      timeout = $browser.defer(function() {
+        timeout = null;
+        if (!input || input.value !== origValue) {
+          listener(ev);
+        }
+      });
     };
 
     element.on('keydown', /** @this */ function(event) {
